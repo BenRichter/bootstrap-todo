@@ -1,0 +1,22 @@
+{
+  "name": "bootstrap-todo",
+  "version": "1.0.0",
+  "description": "A simple todo App using Twitter Bootstrap 3.0 and jQuery",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BenRichter/bootstrap-todo.git"
+  },
+  "author": "Ben Richter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BenRichter/bootstrap-todo/issues"
+  },
+  "homepage": "https://github.com/BenRichter/bootstrap-todo#readme",
+  "devDependencies": {
+    "gulp": "~3.9.x"
+  }
+}
