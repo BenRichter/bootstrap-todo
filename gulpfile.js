@@ -2,10 +2,8 @@
  * Created by Ben on 29.05.2016.
  */
 var gulp = require('gulp'),
-    sass = require('gulp-ruby-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     cssnano = require('gulp-cssnano'),
-    jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
     imagemin = require('gulp-imagemin'),  //
     rename = require('gulp-rename'),
@@ -13,11 +11,18 @@ var gulp = require('gulp'),
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
+    sourcemaps = require('gulp-sourcemaps'),
+    less = require('gulp-less'),
     del = require('del');
 
 
-gulp.task('styles', function() {
-    return sass('app/css/main.scss', { style: 'expanded' })
+
+gulp.task('styles', function () {
+    gulp.src('app/less/**/*.less')
+        .pipe(sourcemaps.init())
+        .pipe(less())
+
+        .pipe(sourcemaps.write())
         .pipe(autoprefixer('last 2 version'))
         .pipe(gulp.dest('dist/assets/css'))
         .pipe(rename({suffix: '.min'}))
@@ -26,10 +31,9 @@ gulp.task('styles', function() {
         .pipe(notify({ message: 'Styles task complete' }));
 });
 
+
 gulp.task('scripts', function() {
     return gulp.src('app/scripts/**/*.js')
-        .pipe(jshint('.jshintrc'))
-        .pipe(jshint.reporter('default'))
         .pipe(concat('main.js'))
         .pipe(gulp.dest('dist/assets/js'))
         .pipe(rename({suffix: '.min'}))
@@ -59,8 +63,8 @@ gulp.task('default', ['clean'], function() {
 // Watch
 gulp.task('watch', function() {
 
-    // Watch .scss files
-    gulp.watch('app/styles/**/*.scss', ['styles']);
+    // Watch .less files
+    gulp.watch('app/styles/**/*.less', ['styles']);
     gulp.watch('app/scripts/**/*.js', ['scripts']);
     //gulp.watch('app/images/**/*', ['images']);
 
