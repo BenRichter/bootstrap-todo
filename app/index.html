@@ -3,50 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-    <div class="task-list" id="pending">
-        <h3>Pending</h3>
-        <!-- Sample task added manually to check look -->
-        <div class="todo-task">
-            <div class="task-header">Sample Header</div>
-            <div class="task-date">25/06/1992</div>
-            <div class="task-description">Lorem Ipsum Dolor Sit Amet</div>
-        </div>
-    </div>
 
-    <div class="task-list" id="inProgress">
-        <h3>In Progress</h3>
-    </div>
+    <form id="tasks-list">
+        <input id="task">
+        <input type="submit" value="Add">
+    </form>
 
-    <div class="task-list" id="completed">
-        <h3>Completed</h3>
-    </div>
-
-    <div class="task-list">
-        <h3>Add a task</h3>
-
-        <form id="todo-form">
-            <input type="text" placeholder="Title"/>
-            <textarea placeholder="Descrtipion"></textarea>
-            <input type="text" placeholder="Due Date (dd/mm/yyyy)"/>
-            <input type="button" class="btn btn-primary" value="Add Task"/>
-        </form>
-
-        <input type="button" class="btn btn-primary" value="Clear Data"/>
-
-        <div id="delete-div">Drag Here to Delete</div>
-    </div>
-
-    <!--TODO:
-            npm install gulp-less  http://gulpjs.com/plugins/
-            install jQuery
-            include bootstrap
+    <ul id="tasks">
 
 
-     -->
+    </ul>
 
 
+    <!-- https://www.sitepoint.com/building-list-jquery-local-storage/   ?? -->
+
+
+    <!--CDN and Fallback to local files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script>if (!window.jQuery) { document.write('<script src="../node_modules/jquery/dist/jquery.min.js"><\/script>'); } </script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script>    $.fn.modal || document.write('<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js">\x3C/script>')</script>
+    <!-- Bootstrap CSS local fallback -->
+    <script>
+        $(document).ready(function() {
+            var bodyColor = $('body').css('color');
+            if(bodyColor != 'rgb(51, 51, 51)') {
+                $("head").prepend('<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">');}});
+    </script>
+
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
