@@ -14,4 +14,4 @@ gen### Example user template template
 gen
 # Created by .ignore support plugin (hsz.mobi)
 /node_modules
-/build
+/app/build
