@@ -5,31 +5,26 @@
 @grey     : #E8E8E8;
 @white       : #F6F6F6;
 
+@screen-sm:  768px;
+@min-sm:   ~"only screen and (min-width:" @screen-sm ~")";
 
 body {
-  padding-top: 50px;
-  padding-top: 70px;
+  padding-top: 60px;
 }
 
-//.navbar-inverse {
-//  background: @black;
-//  .navbar-brand {
-//    color: @orange;
-//    transition: color 0.1s ease-in;
-//  }
-//}
-
-.col-center {
-  float: none;
-  margin: 0 auto;
+.input-group {
+  margin-top: 8px;
 }
 
-.task-list {
-  width: 250px;
-  float: left;
-  margin: 0 5px;
-  background-color: #e3e3e3;
-  min-height: 240px;
-  border-radius: 10px;
-  padding-bottom: 20px;
+.form-control[disabled], fieldset[disabled] .form-control {
+  cursor: default;
+  text-decoration: line-through;
+}
+
+@media @min-sm {
+  // align center
+  .navbar-header, .navbar-brand {
+    width: 100%;
+    text-align: center;
+  }
 }

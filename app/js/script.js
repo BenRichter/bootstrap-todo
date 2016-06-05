@@ -8,145 +8,155 @@
     // DOM ready
     $(document).ready(function () {
 
+        if (typeof(Storage) === "undefined") {
+            alert("Dieser Browser unterstützt keinen LocalStorage. Daten können nicht gespeichert werden.");
+        }
 
-        var defaults = {
-            // CSS selectors and attributes that would be used by the JavaScript functions
-            todoTask: "todo-task",
-            todoHeader: "task-header",
-            todoDate: "task-date",
-            todoDescription: "task-description",
-            taskId: "task-",
-            formId: "todo-form",
-            dataAttribute: "data",
-            deleteDiv: "delete-div"
-        }, codes = {
-            "1" : "#pending", // For pending tasks
-            "2" : "#inProgress",
-            "3" : "#completed"
-        };
+        var $doneArea = $('#done-area');
+        var $currentArea = $('#current-area');
+        var $newTaskInput =  $('#newTask-input');
+
+        var taskID = 0;
+        var tasks = {};
+
+        // initialize the tasks array
+        (function loadTasks(){
+            var key;
+            tasks = JSON.parse(localStorage.getItem("todo"));
+
+            for (key in tasks) {
+                if (tasks.hasOwnProperty(key)) {
+                    addField(tasks[key]);
+
+                    if(key > taskID){ // set ID
+                        taskID = key;
+                    }
+                }
+            }
+        }());
+
+        /** View **/
+        // add field to section
+        function addField(taskObj){
+            var $area, btnClass, btnIcon, disabled;
+
+            if (taskObj.status === "current") {
+                $area = $currentArea;
+                btnClass = 'btn-success';
+                btnIcon = 'glyphicon-ok';
+                disabled = '';
+            } else {
+                $area = $doneArea;
+                btnClass = 'btn-warning';
+                btnIcon = 'glyphicon-remove';
+                disabled = 'disabled';
+            }
+
+            var field =  '<div class="input-group" id="task-'+ taskObj.id +'">' +
+                            '<input class="form-control" type="text" value="' + taskObj.text + '" ' + disabled + '>' +
+                            '<span class="input-group-btn">' +
+                                '<button class="btn ' + btnClass + '" data-id="' + taskObj.id + '">' +
+                                    '<i class="glyphicon ' + btnIcon + '"></i>' +
+                                '</button>' +
+                        '</span></div>';
+
+            $area.append(field);
+        }
+
+        // remove field from section
+        function removeField(id){
+            $('#task-' + id).remove();
+        }
 
 
-        // print Task
-        var generateElement = function(params) {
-            var parent = $(codes[params.code]),
-                wrapper;
-
-            if (!parent) {
+        /** Controler **/
+        // save new task to storage
+        function newTask(text){
+            if (text.length < 3) {
                 return;
             }
 
-            wrapper = $("<div />", {
-                "class" : defaults.todoTask,
-                "id" : defaults.taskId + params.id,
-                "data" : params.id
-            }).appendTo(parent);
-
-            $("<div />", {
-                "class" : defaults.todoHeader,
-                "text": params.title
-            }).appendTo(wrapper);
-
-            $("<div />", {
-                "class" : defaults.todoDate,
-                "text": params.date
-            }).appendTo(wrapper);
-
-            $("<div />", {
-                "class" : defaults.todoDescription,
-                "text": params.description
-            }).appendTo(wrapper);
-        };
-
-
-        var addItem = function() {
-            var inputs = $("#" + defaults.formId + " :input"),
-                errorMessage = "Title can not be empty",
-                id, title, description, date, tempData;
-
-            if (inputs.length !== 4) {
-                return;
-            }
-
-            title = inputs[0].value;
-            description = inputs[1].value;
-            date = inputs[2].value;
-
-            if (!title) {
-                generateDialog(errorMessage);
-                return;
-            }
-
-            id = new Date().getTime();
-
-            tempData = {
-                id : id,
-                code: "1",
-                title: title,
-                date: date,
-                description: description
+            taskID++;
+            tasks[taskID] = {
+                id : taskID,
+                status: "current",
+                text: text
             };
 
             // Saving element in local storage
-            data[id] = tempData;
-            localStorage.setItem("todoData", JSON.stringify(data));
+            localStorage.setItem("todo", JSON.stringify(tasks));
 
-            // Generate Todo Element
-            generateElement(tempData);
+            addField(tasks[taskID]);
 
-            // Reset Form
-            inputs[0].value = "";
-            inputs[1].value = "";
-            inputs[2].value = "";
-        };
+            // clear input field
+            $newTaskInput.val('');
+        }
+
+        // push current tasks to done
+        function setDone(id){
+            tasks[id].status = "done";
+            localStorage.setItem("todo", JSON.stringify(tasks));
+
+            removeField(id);
+            addField(tasks[id]);
+        }
+
+        // push current tasks to done
+        function deleteTask(id){
+            console.log("delete " + id);
+
+            console.log(tasks);
+
+            delete tasks[id];
+
+            console.log(tasks);
+
+            localStorage.setItem("todo", JSON.stringify(tasks));
+
+            removeField(id);
+        }
+
+        function updateTask(id){
+            console.log("update " +  id);
+
+//TODO
+        }
 
 
-        // call new task eg
-        generateElement({
-            id: "123",
-            code: "1",
-            title: "My Uber Important Task",
-            date: "5/2/2014",
-            description: "I have to do a lot of steps to implement this task!"
+        /** Events **/
+        // Save new task on enter or click
+        $newTaskInput.on('keypress',function (e) {
+            e.preventDefault;
+
+            if (e.which === 13) { // Enter
+                newTask($(this).val());
+            }
         });
+        $('#newTask-btn').on('click', function () {
+                newTask($newTaskInput.val());
+            }
+        );
+
+        // Edit tasks
+        $currentArea.on('focusout', 'input', function () {
+                updateTask($(this).data('id'));
+            }
+        );
+
+        // Mark task as done
+        $currentArea.on('click', 'button', function () {
+                setDone($(this).data('id'));
+            }
+        );
+
+        // Delete task
+        $doneArea.on('click', 'button', function () {
+                deleteTask($(this).data('id'));
+            }
+        );
 
 
 
-        // Remove task
-        var removeElement = function(params) {
-            $("#" + defaults.taskId + params.id).remove();
-        };
-
-
-        //// Initial loading of tasks
-        //var i;
-        //for (i = 0; i < localStorage.length; i++){
-        //    $("#tasks").append("<li id='task-" + i + "'>" + localStorage.getItem('task-' + i) + " <a href='#'>Delete</a></li>");
-        //}
-        //
-        //// Add a task
-        //$("#tasks-form").submit(function () {
-        //    if ($("#task").val() !== "") {
-        //        localStorage.setItem("task-" + i, $("#task").val());
-        //
-        //        $("#tasks").append("<li id='task-" + i + "'>" + localStorage.getItem("task-" + i) +" <a href='#'>Delete</a></li>");
-        //        $("#task").val("");
-        //        i++;
-        //    }
-        //    return false;
-        //});
-        //
-        //
-        //// Remove a task
-        //$("#tasks li a").on("click", function () {
-        //    localStorage.removeItem($(this).parent().attr("id"));
-        //    $(this).parent().hide();
-        //    for (i = 0; i < localStorage.length; i++) {
-        //        if (!localStorage.getItem("task-" + i)) {
-        //            localStorage.setItem("task-" + i, localStorage.getItem('task-' + (i + 1)));
-        //            localStorage.removeItem('task-' + (i + 1));
-        //        }
-        //    }
-        //});
     });
 
 }(window.jQuery, window, document));

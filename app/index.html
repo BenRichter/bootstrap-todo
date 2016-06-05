@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title></title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
@@ -10,62 +11,43 @@
 </head>
 <body>
 
-
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container col-center">
+    <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Awesome Todo</a>
+            <a class="navbar-brand text-center" href="#">Awesome Todo</a>
         </div>
 
     </div>
 </nav>
 
 <div class="container wrapper">
-    <form class="form-horizontal">
-        <fieldset>
-                <!-- finished Tasks -->
-                <div class="form-group">
-                    <div class="col-sm-8 col-lg-6 col-center">
-                        <div class="input-group">
-                            <input class="edit form-control">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" id="delete"><i class="glyphicon glyphicon-remove"></i></button>
-                            </span>
-                        </div>
-                    </div>
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+
+            <!-- finished Tasks -->
+            <div class="form-group" id="done-area">
+            </div>
+
+            <hr/>
+
+            <!-- Current Tasks -->
+            <div class="" id="current-area">
+            </div>
+
+            <hr/>
+
+            <!-- New Task-->
+            <div class="form-group">
+                <div class="input-group">
+                    <input id="newTask-input" name="newTask" class="form-control" placeholder="Neue Aufgabe" type="text">
+                         <span class="input-group-btn">
+                        <button class="btn btn-info" id="newTask-btn"><i class="glyphicon glyphicon-plus"></i></button>
+                    </span>
                 </div>
+            </div>
 
-                <hr/>
-
-                <!-- Current Tasks -->
-                <div class="form-group">
-                    <div class="col-sm-8 col-lg-6 col-center">
-                        <div class="input-group">
-                            <input id="appendedcheckbox" name="appendedcheckbox" class="form-control" type="text">
-                            <span class="input-group-addon">
-                                <input type="checkbox">
-                            </span>
-                        </div>
-
-                    </div>
-                </div>
-
-                <hr/>
-
-                <!-- New Task-->
-                <div class="form-group">
-                    <div class="col-sm-8 col-lg-6 col-center">
-                        <div class="input-group">
-                            <input id="newTask" name="newTask" class="form-control" placeholder="Neue Aufgabe" type="text">
-                             <span class="input-group-btn">
-                            <button class="btn btn-default" id="add"><i class="glyphicon glyphicon-plus"></i></button>
-                        </span>
-                        </div>
-                    </div>
-                </div>
-
-        </fieldset>
-    </form>
+        </div>
+    </div>
 </div>
 <footer class="footer">
     <div class="container wrapper">
