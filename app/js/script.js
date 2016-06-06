@@ -1,6 +1,3 @@
-/**
- * Created by Ben on 29.05.2016.
- */
 // immediately invoked, $ locally scoped
 (function ($, window, document) {
     "use strict";
@@ -12,14 +9,13 @@
             alert("Dieser Browser unterstützt keinen LocalStorage. Daten können nicht gespeichert werden.");
         }
 
-        var $doneArea = $('#done-area');
-        var $currentArea = $('#current-area');
-        var $newTaskInput =  $('#newTask-input');
+        var $doneArea = $('#done-area'),
+            $currentArea = $('#current-area'),
+            $newTaskInput =  $('#newTask-input'),
+            taskID = 0,
+            tasks = {};
 
-        var taskID = 0;
-        var tasks = {};
-
-        // initialize the tasks array
+        // initialize the tasks array, self invoking
         (function loadTasks(){
             var key;
             tasks = JSON.parse(localStorage.getItem("todo"));
@@ -68,7 +64,6 @@
             $('#task-' + id).remove();
         }
 
-
         /** Controler **/
         // save new task to storage
         function newTask(text){
@@ -86,9 +81,8 @@
             // Saving element in local storage
             localStorage.setItem("todo", JSON.stringify(tasks));
 
+            // update view, clear input field
             addField(tasks[taskID]);
-
-            // clear input field
             $newTaskInput.val('');
         }
 
@@ -103,23 +97,23 @@
 
         // push current tasks to done
         function deleteTask(id){
-            console.log("delete " + id);
-
-            console.log(tasks);
-
             delete tasks[id];
-
-            console.log(tasks);
-
             localStorage.setItem("todo", JSON.stringify(tasks));
 
             removeField(id);
         }
 
-        function updateTask(id){
-            console.log("update " +  id);
+        // get current values and update all tasks
+        // (focusout does not return exact element)
+        function updateTasks(){
+            $currentArea.find('.input-group').each(function (){
+                var value = $(this).find('input').val();
+                var id = $(this).find('button').data('id');
 
-//TODO
+                tasks[id].text = value;
+            });
+
+            localStorage.setItem("todo", JSON.stringify(tasks));
         }
 
 
@@ -139,7 +133,7 @@
 
         // Edit tasks
         $currentArea.on('focusout', 'input', function () {
-                updateTask($(this).data('id'));
+                updateTasks();
             }
         );
 
@@ -154,9 +148,5 @@
                 deleteTask($(this).data('id'));
             }
         );
-
-
-
     });
-
 }(window.jQuery, window, document));
