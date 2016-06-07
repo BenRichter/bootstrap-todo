@@ -11,20 +11,27 @@
 
         var $doneArea = $('#done-area'),
             $currentArea = $('#current-area'),
-            $newTaskInput =  $('#newTask-input'),
+            $newTaskInput = $('#newTask-input'),
             taskID = 0,
             tasks = {};
 
         // initialize the tasks array, self invoking
-        (function loadTasks(){
-            var key;
-            tasks = JSON.parse(localStorage.getItem("todo"));
+        (function loadTasks() {
+            var key, temp;
+
+            temp = JSON.parse(localStorage.getItem("todo"));
+
+            if (temp !== null && typeof temp === 'object') {
+                tasks = temp;
+            } else {
+                return;
+            }
 
             for (key in tasks) {
                 if (tasks.hasOwnProperty(key)) {
                     addField(tasks[key]);
 
-                    if(key > taskID){ // set ID
+                    if (key > taskID) { // set ID
                         taskID = key;
                     }
                 }
@@ -33,7 +40,7 @@
 
         /** View **/
         // add field to section
-        function addField(taskObj){
+        function addField(taskObj) {
             var $area, btnClass, btnIcon, disabled;
 
             if (taskObj.status === "current") {
@@ -48,32 +55,32 @@
                 disabled = 'disabled';
             }
 
-            var field =  '<div class="input-group" id="task-'+ taskObj.id +'">' +
-                            '<input class="form-control" type="text" value="' + taskObj.text + '" ' + disabled + '>' +
-                            '<span class="input-group-btn">' +
-                                '<button class="btn ' + btnClass + '" data-id="' + taskObj.id + '">' +
-                                    '<i class="glyphicon ' + btnIcon + '"></i>' +
-                                '</button>' +
-                        '</span></div>';
+            var field = '<div class="input-group" id="task-' + taskObj.id + '">' +
+                '<input class="form-control" type="text" value="' + taskObj.text + '" ' + disabled + '>' +
+                '<span class="input-group-btn">' +
+                '<button class="btn ' + btnClass + '" data-id="' + taskObj.id + '">' +
+                '<i class="glyphicon ' + btnIcon + '"></i>' +
+                '</button>' +
+                '</span></div>';
 
             $area.append(field);
         }
 
         // remove field from section
-        function removeField(id){
+        function removeField(id) {
             $('#task-' + id).remove();
         }
 
         /** Controler **/
         // save new task to storage
-        function newTask(text){
+        function newTask(text) {
             if (text.length < 3) {
                 return;
             }
 
             taskID++;
             tasks[taskID] = {
-                id : taskID,
+                id: taskID,
                 status: "current",
                 text: text
             };
@@ -87,7 +94,7 @@
         }
 
         // push current tasks to done
-        function setDone(id){
+        function setDone(id) {
             tasks[id].status = "done";
             localStorage.setItem("todo", JSON.stringify(tasks));
 
@@ -96,7 +103,7 @@
         }
 
         // push current tasks to done
-        function deleteTask(id){
+        function deleteTask(id) {
             delete tasks[id];
             localStorage.setItem("todo", JSON.stringify(tasks));
 
@@ -105,8 +112,8 @@
 
         // get current values and update all tasks
         // (focusout does not return exact element)
-        function updateTasks(){
-            $currentArea.find('.input-group').each(function (){
+        function updateTasks() {
+            $currentArea.find('.input-group').each(function () {
                 var value = $(this).find('input').val();
                 var id = $(this).find('button').data('id');
 
@@ -119,7 +126,7 @@
 
         /** Events **/
         // Save new task on enter or click
-        $newTaskInput.on('keypress',function (e) {
+        $newTaskInput.on('keypress', function (e) {
             e.preventDefault;
 
             if (e.which === 13) { // Enter
