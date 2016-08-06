@@ -19,8 +19,9 @@
         (function loadTasks() {
             var key, temp;
 
-            temp = JSON.parse(localStorage.getItem("todo"));
+            temp = JSON.parse(localStorage.getItem("todo-local"));
 
+            // check if local storage is initialized
             if (temp !== null && typeof temp === 'object') {
                 tasks = temp;
             } else {
@@ -38,8 +39,9 @@
             }
         }());
 
+
         /** View **/
-        // add field to section
+        // add task field to section
         function addField(taskObj) {
             var $area, btnClass, btnIcon, disabled;
 
@@ -71,6 +73,7 @@
             $('#task-' + id).remove();
         }
 
+
         /** Controler **/
         // save new task to storage
         function newTask(text) {
@@ -86,7 +89,7 @@
             };
 
             // Saving element in local storage
-            localStorage.setItem("todo", JSON.stringify(tasks));
+            localStorage.setItem("todo-local", JSON.stringify(tasks));
 
             // update view, clear input field
             addField(tasks[taskID]);
@@ -96,7 +99,7 @@
         // push current tasks to done
         function setDone(id) {
             tasks[id].status = "done";
-            localStorage.setItem("todo", JSON.stringify(tasks));
+            localStorage.setItem("todo-local", JSON.stringify(tasks));
 
             removeField(id);
             addField(tasks[id]);
@@ -105,7 +108,7 @@
         // push current tasks to done
         function deleteTask(id) {
             delete tasks[id];
-            localStorage.setItem("todo", JSON.stringify(tasks));
+            localStorage.setItem("todo-local", JSON.stringify(tasks));
 
             removeField(id);
         }
@@ -120,7 +123,7 @@
                 tasks[id].text = value;
             });
 
-            localStorage.setItem("todo", JSON.stringify(tasks));
+            localStorage.setItem("todo-local", JSON.stringify(tasks));
         }
 
 
@@ -133,27 +136,25 @@
                 newTask($(this).val());
             }
         });
+
         $('#newTask-btn').on('click', function () {
                 newTask($newTaskInput.val());
-            }
-        );
+        });
 
         // Edit tasks
         $currentArea.on('focusout', 'input', function () {
                 updateTasks();
-            }
-        );
+        });
 
         // Mark task as done
         $currentArea.on('click', 'button', function () {
                 setDone($(this).data('id'));
-            }
-        );
+        });
 
         // Delete task
         $doneArea.on('click', 'button', function () {
                 deleteTask($(this).data('id'));
-            }
-        );
+        });
+
     });
 }(window.jQuery, window, document));
