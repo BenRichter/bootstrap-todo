@@ -12,3 +12,8 @@ A simple todo App using Twitter Bootstrap 3.0 and jQuery
   - For developers:
     - install all node packages: `npm install`
     - Use Gulp tasks: `gulp` (clean, styles:less > css, scrips),`gulp watch` (+ livereload), `gulp styles`,`gulp scripts`
+
+
+## Usage
+
+  - open `app/index.html`in your favourite browser 
